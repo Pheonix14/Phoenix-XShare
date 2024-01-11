@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Share your files like never before with Phoenix Share. Phoenix Share is an open source file sharing platform that combines the simplicity of Express.js with the blazing speed and security of a phoenix">
+    <meta name="author" content="Phoenix">
+    <meta property="og:title" content="Phoenix Share">
+  <meta property="og:description" content="Share your files like never before with Phoenix Share. Phoenix Share is an open source file sharing platform that combines the simplicity of Express.js with the blazing speed and security of a phoenix">
+  <meta property="og:image" content="/graphics/banner.png">
+    <link rel="icon" href="/graphics/logo.jpeg">
+    <link href="
+https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
+" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/styles/error.css">
+   <link rel="manifest" href="/manifest.json">
+    <title>Phoenix Share - Error</title>
+</head>
+<body>
+<div class="container">
+    <img class="logo" src="/graphics/logo_trans.png" alt="Logo">
+    <h1>Phoenix Share</h1>
+    <div class="error-container">
+        <p class="error-message"> <i class="bi bi-exclamation-triangle-fill"></i> Error: <%= errorMessage %></p>
+        <a href="/" class="return-button">Return to Home</a>
+    </div>
+</div>
+  <script src="/scripts/error.js"></script>
+</body>
+</html>

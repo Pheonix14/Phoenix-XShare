@@ -1,0 +1,15 @@
+{
+  "name": "Phoenix Share",
+  "description": "A file sharing app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "/icons/logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Share your files like never before with Phoenix Share. Phoenix Share is an open source file sharing platform that combines the simplicity of Express.js with the blazing speed and security of a phoenix">
+    <meta name="author" content="Pheonix">
+  <meta property="og:title" content="Phoenix Share">
+  <meta property="og:description" content="Share your files like never before with Phoenix Share. Phoenix Share is an open source file sharing platform that combines the simplicity of Express.js with the blazing speed and security of a phoenix">
+  <meta property="og:image" content="/graphics/banner.png">
+    <link rel="icon" href="/graphics/logo.jpeg">
+    <link href="
+https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
+" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/styles/login.css">
+    <link rel="manifest" href="/manifest.json">
+    <title>Phoenix Share - Login</title>
+</head>
+<body>
+<div class="container">
+    <img class="logo" src="/graphics/logo_trans.png" alt="Logo">
+    <h1>Phoenix Share</h1>
+    <div class="form-container">
+        <form id="loginForm" action="/login" method="POST">
+            <input type="text" id="username" name="username" class="input-field" placeholder="Username" required>
+            <input type="password" id="password" name="password" class="input-field" placeholder="Password" required>
+           <div class="passwordToggle-container">
+    <a id="passwordToggle" class="passwordToggle">Show Password</a>
+           </div>
+            <button type="submit" class="login-button">
+             <i class="bi bi-person-check"></i> Login
+            </button>
+        </form>
+    </div>
+    <div class="footer">
+        Don't have an account? <a href="/create-account" class="text-blue-500">Register now</a>
+    </div>
+  <p id="Error" style="color: red;"></p>
+</div>
+  <script src="/scripts/login.js"></script>
+</body>
+</html>

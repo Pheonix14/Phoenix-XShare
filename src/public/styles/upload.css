@@ -1,0 +1,85 @@
+        body {
+            background-color: #121212;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 20px 0;
+            color: #fff;
+        }
+
+        .form-container {
+            width: 90%;
+            max-width: 320px;
+            padding: 30px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .upload-button {
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .upload-button:hover {
+            background-color: #357abd;
+        }
+
+        #dragDropArea {
+            width: 100%;
+            min-height: 150px;
+            border: 2px dashed #4a90e2;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            background-color: #1e1e1e;
+            color: #4a90e2;
+            font-weight: bold;
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        #dragDropArea.dragging {
+            border-color: #4a90e2;
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #00ff00;
+        }
+
+        #downloadLink {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #fff;
+        }
