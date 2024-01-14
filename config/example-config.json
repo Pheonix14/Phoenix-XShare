@@ -1,16 +1,9 @@
 {
 "settings":{
-  "domain": "https://example.com",
-  "secret": "xzy",
-  "mongoURI": "your mongodb uri",
-  "port": 3000,
-  "remotePath": "/path/to/storage/dir",
-  "sslPath": "/path/to/ssl/dir"
-},
-"sftpserver":{
- "host": "localhost",
- "port": 22, 
- "user": "something",
- "password": "something"
-  }
+  "domain": "http://localhost:3000",
+  "sessionSecret": "xzy",
+  "loginUser": "admin",
+  "loginPass": "admin",
+  "port": 3000
+           }
 }
