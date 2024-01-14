@@ -22,6 +22,8 @@ Phoenix XShare is a private upload server of [Phoenix Share](https://github.com/
 
 - New UI: Phoenix XShare has a new and improved user interface, with a modern and sleek design.
 
+- Cross Platform: Phoenix XShare has better PWA(Progressive Web Apps) support than Phoenix Share.
+
 - Lightweight And Efficient: Phoenix XShare more lighter than Phoenix Share and more efficient.
 
 - More secure: Phoenix XShare has enhanced security measures, such as on-device encryption, database and storage.
@@ -53,7 +55,11 @@ to install all the dependencies required for Phoenix XShare.
 Fill the configuration: Open the `/config/config.json`
  file and fill in the necessary configuration options, such as port, encryption key, domain, etc.
 
-Start the server: Run npm run start to start the Phoenix XShare server. You should see a message like Phoenix XShare is running on `http://localhost:3000` in your terminal.
+Start the server: Run 
+```js
+npm run start
+```
+to start the Phoenix XShare server. You should see a message like Phoenix XShare is running on `http://localhost:3000` in your terminal.
 
 Enjoy: Open your browser and go to `http://localhost:3000` to see Phoenix XShare in action. You can now upload and share files as you wish.
 ## License:

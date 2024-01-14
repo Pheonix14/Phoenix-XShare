@@ -373,5 +373,5 @@ function decryptFile(filePath) {
 }
 
 app.listen(config.settings.port, () => {
-    log(`Server is running on port ${config.settings.port}`);
+    log(`Phoenix XShare is running on port ${config.settings.port}`);
 })

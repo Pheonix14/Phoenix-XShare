@@ -1,47 +1,53 @@
-// Define a unique cache name for your PWA
-const CACHE_NAME = 'phoenix-xshare-cache-v1';
+// service-worker.js
 
-// List of URLs to cache when the Service Worker is installed
-const urlsToCache = [
-  '/',
-  '/login', // Add all the URLs you want to cache here
-  '/create-account',
-  '/upload',
-  '/download',
-  '/error'
-];
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
 
-// Install the Service Worker and cache assets
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
-  );
-});
+if (workbox) {
+  // Precache and serve the index.html file
+  workbox.precaching.precacheAndRoute([{'url': '/', 'revision': '1'}]);
 
-// Serve cached content when there's no network connection
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        return response || fetch(event.request);
-      })
-  );
-});
-
-// Remove old caches when a new version of the PWA is activated
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
+  // Cache the Google Fonts stylesheets
+  workbox.routing.registerRoute(
+    new RegExp('https://fonts.googleapis.com/css'),
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: 'google-fonts-stylesheets',
     })
   );
-});
+
+  // Cache the Google Fonts webfonts
+  workbox.routing.registerRoute(
+    new RegExp('https://fonts.gstatic.com/s/'),
+    new workbox.strategies.CacheFirst({
+      cacheName: 'google-fonts-webfonts',
+      plugins: [
+        new workbox.cacheableResponse.CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+        new workbox.expiration.ExpirationPlugin({
+          maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+        }),
+      ],
+    })
+  );
+
+  // Update the service worker and refresh the page whenever a new version is available
+  self.addEventListener('install', (event) => {
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.filter((cacheName) => cacheName.startsWith('workbox-precache')).map((cacheName) => {
+            return caches.delete(cacheName);
+          })
+        );
+      })
+    );
+  });
+
+  self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      self.skipWaiting();
+    }
+  });
+} else {
+  console.error('Workbox could not be loaded. Please check the network.');
+}
