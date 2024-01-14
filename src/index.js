@@ -1,23 +1,18 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import fileUpload from 'express-fileupload';
 import fs from 'fs';
 import path from 'path';
 import qrCode from 'qrcode';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import crypto from 'crypto';
 import ejs from 'ejs';
 import cookieParser from 'cookie-parser';
 import { DateTime } from 'luxon';
 import shortid from 'shortid';
-import https from 'https';
-import rateLimit from 'express-rate-limit';
 import log from './utils/console.js';
-import getDB from './utils/mongodb.js';
-import getClient from './utils/sftp.js';
-import config from './../config/config.json' assert { type: "json" };
+import getDB from './utils/quickdb.js';
+import config from '../config/config.json' assert { type: "json" };
 
 const app = express();
 
@@ -27,57 +22,22 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 app.set('views', path.join(__dirname, 'public'));
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(bodyParser.json());
-
-const options = {
-  key: fs.readFileSync(`${config.settings.sslPath}/privkey.pem`), // Replace with the path to your private key file
-  cert: fs.readFileSync(`${config.settings.sslPath}/fullchain.pem`), // Replace with the path to your certificate file
-};
- const server = https.createServer(options, app);
-
-app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cookieParser()); // Use cookie-parser middleware
 app.use(session({
-  secret: config.settings.secret,
+  secret: config.settings.sessionSecret,
   resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 14 * 24 * 60 * 60
-  },
-  store: MongoStore.create({
-    mongoUrl: config.settings.mongoURI,
-    dbName: 'phoenix-share',
-    collectionName: 'sessions',
-    ttl: 14 * 24 * 60 * 60, 
-    autoRemove: 'native'
-  })
+  saveUninitialized: true
 }));
-
-app.use(bodyParser.urlencoded({ extended: false }));
-
-
-const rateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour window
-  max: 250, // Limit each IP to 250 requests per hour
-  message: 'Too many requests from this IP, please try again later.'
-});
 
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
-app.use(rateLimiter);
-
-// Set the upload limit (default: 500MB)
-const uploadLimit = 500 * 1024 * 1024;
-app.use(fileUpload({
-  limits: { fileSize: uploadLimit }
-}));
 
 
 // Serve the login page
 app.get('/', checkLoggedIn, (req, res) => {
-  res.render('login');
-});
-app.get('/login', checkLoggedIn, (req, res) => {
   res.render('login');
 });
 
@@ -86,82 +46,20 @@ app.get('/login', checkLoggedIn, (req, res) => {
   res.render('login');
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
   const { username, password } = req.body;
-const db = await getDB();
+console.log(username, password);
   
-  const usersCollection = db.collection('users');
-
-  const user = await usersCollection.findOne({ username });
-
-  if (!user) {
+if (username !== config.settings.loginUser && password !== config.settings.loginPass) {
     return res.status(400).send('Invalid username or password');
-  }
- if (user.status === 'banned') {
-    return res.status(400).send('Your account is banned or disabled. please contact to discord admins');
- }
- 
-  bcrypt.compare(password, user.password, (err, result) => {
-    if (err) {
-      log(err);
-      return res.status(500).send('Internal Server Error');
-    }
-
-    if (result) {
-      res.cookie('loggedInUser', username);
+}
+      res.cookie("loggedIn", true);
+      res.cookie("loggedInUser", username);
       req.session.user = username;
       req.session.loggedIn = true;
-      return res.redirect('/upload');
-    } else {
-      return res.status(400).send('Invalid username or password');
-    }
-  });
+  return res.redirect('/upload');
 });
 
-// Serve the account creation page
-app.get('/create-account', (req, res) => {
-  res.render('create-account');
-});
-
-// Handle account creation form submission
-app.post('/create-account', async (req, res) => {
-  const { email, username, password } = req.body;
-  const db = await getDB();
-  
-  const usersCollection = db.collection('users');
-  
-  if (await usersCollection.findOne({ email })) {
-    return res.status(400).send('Account already exist in this email');
-  }
-  if (await usersCollection.findOne({ username })) {
-    return res.status(400).send('Username already taken');
-  }
-
-  bcrypt.genSalt(10, async (err, salt) => {
-    if (err) {
-      log(err, 'error');
-      return res.status(500).send('Internal Server Error');
-    }
-
-    bcrypt.hash(password, salt, async (err, hash) => {
-      if (err) {
-        log(err, 'error');
-        return res.status(500).send('Internal Server Error');
-      }
-
-      const user = {
-        email: email,
-        username: username,
-        password: hash, 
-        status: 'active'
-      };
-
-      await usersCollection.insertOne(user);
-
-      res.redirect('/');
-    });
-  });
-});
 // Authentication middleware
 function authenticate(req, res, next) {
   // Check if the user is logged in
@@ -169,9 +67,10 @@ function authenticate(req, res, next) {
     next();
   } else {
     // Check if there is a loggedInUser cookie and restore the session
-    if (req.cookies.loggedInUser) {
+    if (req.cookies.loggedIn) {
       req.session.loggedIn = true;
       req.session.user = req.cookies.loggedInUser;
+      req.session.loggedIn = true;
       return next();
     }
     // User is not logged in, redirect to the login page
@@ -189,16 +88,15 @@ function checkLoggedIn(req, res, next) {
 
 // Serve the upload form page
 app.get('/upload', authenticate, (req, res) => {
-  const username = req.session.user; // Get the user from the session
-  res.render('upload', { username });
+  res.render('upload');
 });
 
 
 // Handle file upload
 app.post('/upload', authenticate, async (req, res) => {
+  try { 
   const username = req.session.user;
   const db = await getDB();
-  const client = await getClient();
   // Check if a file was uploaded
   if (!req.files || !req.files.file) {
     return res.status(400).send('No file was uploaded.');
@@ -236,24 +134,11 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
 // Generate the QR code image
   const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
   const remotePath = `${config.settings.remotePath}/${fileName}`;
-
-  log(`${fileName} is just uploaded by ${username} and transferring to SFTP server...`)
   
-  try {
-  
- const dataCollection = db.collection('file_uploadData');
-
-  await dataCollection.insertOne({
-    filename: fileName,
-    uploadTime: formattedOutput,
-    uploader: username, 
-    status: 'normal'
-  });
   // Encrypt the file
     const encryptedFilePath = encryptFile(file.data, filePath);
-
-  await client.fastPut(encryptedFilePath, remotePath);
-
+    const filesDB = db.table('filesDB');
+  await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username })
   // Display the file name, download link, and QR code on the upload success page
   res.send(`
 <div class="Download">
@@ -316,8 +201,6 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
 </style>
 
 `);
-    log(`${fileName} is transferred to SFTP server. Now it's deleting from local storage...`)
-    deleteFile(filePath);
 } catch (err) {
     log(err, 'error');
     res.status(500).send('File upload failed.');
@@ -326,26 +209,24 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
 // Handle file download
 app.get('/qr-download/:fileName', async (req, res) => {
   const { fileName } = req.params;
-  const client = await getClient();
-  const searchDirectory = `${config.settings.remotePath}`;
-const fileList = await client.list(searchDirectory);
-  const foundFile = fileList.find((file) => file.name === fileName);
+  
+const filePath = path.join(__dirname, 'uploads', fileName);
+
+let foundFile;
+
+fs.access(filePath, fs.constants.F_OK, (err) => {
+  if (!err) {
+    foundFile = true;
+  } else {
+    foundFile = false;
+  }
+
   if (!foundFile) {
     return res.status(404).render('error', { errorMessage: 'File not found' });
   }
-
-  const remotePath = `${config.settings.remotePath}/${fileName}`;
-  const localPath = `${__dirname}/downloads/${fileName}`;
-try {
- await client.fastGet(remotePath, localPath); 
-  } catch (error) {
-   log(error, 'error');
-  return res.status(500).send('Error occurred while downloading the file.');
-}
-    const localFilePath = path.join(__dirname, 'downloads', fileName);
     
   // Decrypt the file
-  const decryptedFilePath = decryptFile(localFilePath);
+  const decryptedFilePath = decryptFile(filePath);
 
 res.set({
     'Accept-Ranges': 'bytes',
@@ -366,17 +247,23 @@ res.set({
     deleteFile(decryptedFilePath);
   });
 });
+});
 
 app.get(`/download/:fileName`, async (req, res) => {
   
 const { fileName } = req.params;
   const db = await getDB();
-  const client = await getClient();
-  const file = await db.collection('files').findOne({ fileName });
-const searchDirectory = `${config.settings.remotePath}`;
-  const fileList = await client.list(searchDirectory);
-  const foundFile = fileList.find((file) => file.name === fileName);
+
+const filePath = path.join(__dirname, 'uploads', fileName);
   
+  let foundFile;
+
+fs.access(filePath, fs.constants.F_OK, async (err) => {
+  if (!err) {
+    foundFile = true;
+  } else {
+    foundFile = false;
+  }
   if (!foundFile) {
     return res.status(404).render('error', { errorMessage: 'File not found' });
   }
@@ -384,42 +271,35 @@ const fileSizeInMB = foundFile.size / (1024 * 1024);
   const fileSize = fileSizeInMB.toFixed(2);
 
   //getting fileData from db
-  const dataCollection = db.collection('file_uploadData');
-  const fileData = await dataCollection.findOne({ filename: fileName });
+  const filesDB = db.table('filesDB');
+  let fileData = await filesDB.get(fileName);
   const uploadTime = fileData.uploadTime;
   const uploader = fileData.uploader;
   
   res.render('download', { fileName, uploadTime, uploader, fileSize});
 });
-
+});
 
 app.get(`/download-file/:fileName`, async (req, res) => {
 const { fileName } = req.params;
-  const client = await getClient();
   const db = await getDB();
+
+  const filePath = path.join(__dirname, 'uploads', fileName);
   
-  const remotePath = `${config.settings.remotePath}/${fileName}`;
-  const localPath = `${__dirname}/downloads/${fileName}`;
-try {
- await client.fastGet(remotePath, localPath); 
-  } catch (error) {
-   log(error, 'error');
-  return res.status(500).render('error', { errorMessage: 'Error occurred while downloading the file.' });
-}
-    const localFilePath = path.join(__dirname, 'downloads', fileName);
+let foundFile;
 
-const decryptedFilePath = decryptFile(localFilePath);
-       
-const dataCollection = db.collection('file_uploadData');
+fs.access(filePath, fs.constants.F_OK, (err) => {
+  if (!err) {
+    foundFile = true;
+  } else {
+    foundFile = false;
+  }
+  if (!foundFile) {
+    return res.status(404).render('error', { errorMessage: 'File not found' });
+  }
+  
 
-const localDateTime = DateTime.local();
-
-// Convert to IST (Indian Standard Time)
-const istDateTime = localDateTime.setZone('Asia/Kolkata');
-
-// Format the output
-const formattedOutput = `
-Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)} IST (GMT+05:30)`;
+const decryptedFilePath = decryptFile(filePath);
   
 res.set({
     'Accept-Ranges': 'bytes',
@@ -435,10 +315,10 @@ res.set({
       log(err, 'error');
       return res.status(500).send('Error occurred while downloading the file.');
     }
-    await dataCollection.updateOne({ filename: fileName }, { $set: { lastDownload: formattedOutput } });
     log(`Decrypted ${fileName} is now deleting because it's downloaded.....`);
     deleteFile(decryptedFilePath)
    });
+});
 });
 
 app.use((req, res, next) => {
@@ -492,6 +372,6 @@ function decryptFile(filePath) {
   return decryptedFilePath;
 }
 
-server.listen(config.settings.port, () => {
+app.listen(config.settings.port, () => {
     log(`Server is running on port ${config.settings.port}`);
-});
+})

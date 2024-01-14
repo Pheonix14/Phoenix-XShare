@@ -1,85 +1,61 @@
-![Logo](https://media.discordapp.net/attachments/1118813310041739314/1160459275932553236/20231008_113828_0000-removebg-preview.png)
+![Logo](https://media.discordapp.net/attachments/1152856250460160022/1195646381793222656/1704471806240.png)
+# Phoenix XShare
 
-
-# Phoenix Share
-
-Share your files like never before with Phoenix Share. Phoenix Share is an open source file sharing platform that combines the simplicity of Express.js with the speed and security of a phoenix.
+Phoenix XShare is a private upload server of [Phoenix Share](https://github.com/Pheonix14/Phoenix-Share), a web application that allows users to upload and share files easily and securely. It is a fork of the Phoenix Share repository, with some additional features and improvements.
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-
-## Disclaimer
-
-**IMPORTANT:** Although an encryption system has been added to this file sharing system, it is important to note that it may still have vulnerabilities and potential issues. Therefore, it is crucial to exercise caution when using this system and avoid uploading or sharing sensitive or confidential data. The files uploaded to the server are stored with encryption but things may break anytime. Please be aware that the security and reliability of the system cannot be guaranteed, and you should use it at your own risk.
-## Features
-
-- end-to-end encryption: a encryption system that provides more security.
-- User authentication: Users can log in with their credentials to access the file sharing system.
-- File upload: Users can select and upload files from their devices.
-- File download: Uploaded files can be downloaded using unique download links.
-- QR code generation: Quick sharing and scanning of files through QR codes.
+![GitHub Repo stars](https://img.shields.io/github/stars/Pheonix14/Phoenix-XShare)
 
 
-## Prerequisites
 
-Before running the system, ensure that you have the following installed:
+## Key Features:
 
-- Node.js (lts Version)
-- npm (Node Package Manager)
-- SFTP server
+- Encryption toggle on/off option: Users can choose whether to encrypt their files before uploading them, for extra security and privacy.
 
-## Run Locally
+- CDN for sharing file on WhatsApp and Discord: Users can share their files on popular messaging platforms, using a Content Delivery Network (CDN) that ensures fast and reliable delivery.
 
-Clone the project:
+- No external database and SFTP server needed: Phoenix XShare uses a local file system to store and manage files, eliminating the need for external dependencies and simplifying the setup process.
 
+- Easy to use: Phoenix XShare has a user-friendly interface that makes uploading and sharing files a breeze.
+
+- Almost every feature of Phoenix Share: Phoenix XShare inherits most of the features of Phoenix Share.
+
+- New UI: Phoenix XShare has a new and improved user interface, with a modern and sleek design.
+
+- Lightweight And Efficient: Phoenix XShare more lighter than Phoenix Share and more efficient.
+
+- More secure: Phoenix XShare has enhanced security measures, such as on-device encryption, database and storage.
+## Prerequisites:
+
+- Node.js (LTS version): You need to have Node.js installed on your system to run Phoenix XShare. You can download it from [here](https://nodejs.org/en ).
+## Run locally:
+
+To run Phoenix XShare locally, follow these steps:
+
+Clone the repository: Run
 ```bash
-  git clone https://github.com/Phoenix-Share/Phoenix-Share.git
+git clone https://github.com/Pheonix14/Phoenix-XShare
 ```
+ in your terminal to clone the Phoenix XShare repository to your local machine.
 
-Go to the project directory:
-
+Change directory: Run
 ```bash
-  cd Phoenix-Share
+cd Phoenix-XShare
 ```
+to change your current directory to the Phoenix XShare folder.
 
-Config:
-
-Rename the ./config/example-config.json to ./config/config.json And fill configurations.
-
-Install dependencies:
-
+Install dependencies: Run
 ```bash
-  npm install
+npm install
 ```
+to install all the dependencies required for Phoenix XShare.
 
-Start the server:
+Fill the configuration: Open the `/config/config.json`
+ file and fill in the necessary configuration options, such as port, encryption key, domain, etc.
 
-```bash
-  npm run start
-```
+Start the server: Run npm run start to start the Phoenix XShare server. You should see a message like Phoenix XShare is running on `http://localhost:3000` in your terminal.
 
+Enjoy: Open your browser and go to `http://localhost:3000` to see Phoenix XShare in action. You can now upload and share files as you wish.
+## License:
 
-## Usage
-
-1. Run `node index.js` or `npm start` to start the server.
-2. Open your web browser and navigate to `http://localhost:3000`.
-3. Log in with your credentials.
-4. On the upload page, select the file you want to share and click the "Upload" button.
-5. Once the upload is successful, you will be provided with a download link and a QR code for sharing.
-6. Share the download link or QR code with others to allow them to download the file.
-
-
-## Customization
-
-- To change the server port, update the port number in `config.json` file.
-- To change the domain, update the domain url in `config.json`.
-- To change the cookie secret, update the secret key in `config.json`. 
-## Support
-
-For support, [Join discord server](https://discord.gg/DSdjz5Cgwb)
-
-
-## License
-
-[MIT License](LICENSE)
-
-Feel free to customize and modify this file sharing system according to your needs. Contributions are welcome!
+Phoenix XShare is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. See the LICENSE file for more details.

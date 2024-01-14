@@ -1,5 +1,5 @@
 // Define a unique cache name for your PWA
-const CACHE_NAME = 'phoenix-share-cache-v1';
+const CACHE_NAME = 'phoenix-xshare-cache-v1';
 
 // List of URLs to cache when the Service Worker is installed
 const urlsToCache = [

@@ -3,24 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Phoenix Share">
-    <meta name="author" content="Phoenix">
-    <meta property="og:title" content="Phoenix Share">
-  <meta property="og:description" content="Share your files like never before with Phoenix Share. Phoenix Share is an open source file sharing platform that combines the simplicity of Express.js with the blazing speed and security of a phoenix">
-  <meta property="og:image" content="/graphics/banner.png">
-    <link rel="icon" href="/graphics/logo.jpeg">
+    <meta name="description" content="Phoenix XShare is a private upload server of Phoenix Share, a web application that allows users to upload and share files easily and securely. It is a fork of the Phoenix Share repository, with some additional features and improvements.">
+    <meta name="author" content="Pheonix">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="apple-mobile-web-app-title" content="Phoenix XShare">
+<meta name="application-name" content="Phoenix XShare">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="theme-color" content="#121212">
     <link href="
 https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
 " rel="stylesheet">
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
    <link rel="stylesheet" href="/styles/download.css">
-   <link rel="manifest" href="/manifest.json">
-    <title>Phoenix Share - Download</title>
+    <title>Phoenix XShare - Download</title>
 </head>
 <body>
 <div class="container">
-    <img class="logo" src="/graphics/logo_trans.png" alt="Logo">
-    <h1>Phoenix Share</h1>
+    <img class="logo" src="/icons/logo-trans.png" alt="Logo">
+    <h1>Phoenix XShare</h1>
     <div class="download-container">
         <h2>Download File</h2>
         <p> <i class="bi bi-file-earmark-fill"></i> File Name: <%= fileName %></p>
@@ -38,6 +43,6 @@ https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
   <p id="Error" style="color: red;"></p>
     </div>
 </div>
-<script src="/scripts/download.js"></script>
 </body>
+  <script src="/scripts/download.js" type="module"></script>
 </html>
