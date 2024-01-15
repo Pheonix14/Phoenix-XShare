@@ -1,5 +1,5 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import fileUpload from "express-fileupload";
 import fs from 'fs';
 import path from 'path';
 import qrCode from 'qrcode';
@@ -20,11 +20,10 @@ app.set('view engine', 'ejs');
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-app.set('views', path.join(__dirname, 'public'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'public'));
+app.use(express.json());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cookieParser()); // Use cookie-parser middleware
 app.use(session({
@@ -33,10 +32,13 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// Use the URL-encoded body parser
+app.use(express.urlencoded({ extended: true })); 
+
+app.use(fileUpload());
+
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
-
-// Serve the login page
 app.get('/', checkLoggedIn, (req, res) => {
   res.render('login');
 });
@@ -46,13 +48,13 @@ app.get('/login', checkLoggedIn, (req, res) => {
   res.render('login');
 });
 
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-console.log(username, password);
-  
-if (username !== config.settings.loginUser && password !== config.settings.loginPass) {
-    return res.status(400).send('Invalid username or password');
-}
+app.post('/login', async (req, res) => {
+  const {username, password} = req.body;
+
+  if (username !== config.settings.loginUser && password !== config.settings.loginPass) {
+      return res.status(400).send('Invalid username or password');
+  }
+
       res.cookie("loggedIn", true);
       res.cookie("loggedInUser", username);
       req.session.user = username;
@@ -199,7 +201,6 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
         width: 120px;
     }
 </style>
-
 `);
 } catch (err) {
     log(err, 'error');
@@ -267,7 +268,7 @@ fs.access(filePath, fs.constants.F_OK, async (err) => {
   if (!foundFile) {
     return res.status(404).render('error', { errorMessage: 'File not found' });
   }
-const fileSizeInMB = foundFile.size / (1024 * 1024);
+const fileSizeInMB = filePath.size / (1024 * 1024);
   const fileSize = fileSizeInMB.toFixed(2);
 
   //getting fileData from db
