@@ -3,3 +3,4 @@ node_modules
 replit.nix
 config.json
 database.sqlite
+sessionsDB.sqlite

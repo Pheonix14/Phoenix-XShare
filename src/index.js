@@ -9,7 +9,7 @@ import crypto from 'crypto';
 import ejs from 'ejs';
 import cookieParser from 'cookie-parser';
 import { DateTime } from 'luxon';
-import shortid from 'shortid';
+import SQLiteStore from 'connect-sqlite3';
 import log from './utils/console.js';
 import getDB from './utils/quickdb.js';
 import config from '../config/config.json' assert { type: "json" };
@@ -26,10 +26,19 @@ app.use(express.json());
 
 
 app.use(cookieParser()); // Use cookie-parser middleware
+
+const SQLiteStoreInstance = SQLiteStore(session);
+
 app.use(session({
+  store: new SQLiteStoreInstance({
+    db: 'sessionsDB.sqlite',
+    table: 'sessions',
+    dir: './src/utils/db/'
+  }),
   secret: config.settings.sessionSecret,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { maxAge: 15 * 24 * 60 * 60 * 1000 }
 }));
 
 // Use the URL-encoded body parser
@@ -87,12 +96,10 @@ function checkLoggedIn(req, res, next) {
   next();
 }
 
-
 // Serve the upload form page
 app.get('/upload', authenticate, (req, res) => {
   res.render('upload');
 });
-
 
 // Handle file upload
 app.post('/upload', authenticate, async (req, res) => {
@@ -113,7 +120,11 @@ const file = req.files.file;
   } else {
      fileN2 = fileN;
   }
-  const fileName = `${fileN2}-${shortid.generate()}${fileExtension}`;
+
+const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const shortID = Array.from({ length: crypto.randomInt(5, 11) }, () => characters[crypto.randomInt(characters.length)]).join('');
+    
+  const fileName = `${fileN2}-${shortID}${fileExtension}`;
   const filePath = path.join(__dirname, 'uploads', fileName);
 
   const downloadLink = `${config.settings.domain}/download/${fileName}`;
@@ -136,9 +147,18 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
   } else {
     fs.writeFileSync(filePath, file.data);
   }
+    fs.stat(filePath, async (err, stats) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  const fileSizeInBytes = stats.size;
+  const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+
     const filesDB = db.table('filesDB');
     
-  await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username, encryption: `${config.settings.encryption}`});
+  await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username, encryption: `${config.settings.encryption}`, fileSize: fileSizeInMegabytes.toFixed(fileSizeInMegabytes < 1 ? 2 : 0)});
+});
   // Display the file name, download link, and QR code on the upload success page
   res.send(`
 <div class="Download">
@@ -226,14 +246,13 @@ fs.access(filePath, fs.constants.F_OK, async (err) => {
   if (!foundFile) {
     return res.status(404).render('error', { errorMessage: 'File not found' });
   }
-const fileSizeInMB = filePath.size / (1024 * 1024);
-  const fileSize = fileSizeInMB.toFixed(2);
 
   //getting fileData from db
   const filesDB = db.table('filesDB');
   let fileData = await filesDB.get(fileName);
   const uploadTime = fileData.uploadTime;
   const uploader = fileData.uploader;
+  const fileSize = fileData.fileSize;
   
   res.render('download', { fileName, uploadTime, uploader, fileSize});
 });
