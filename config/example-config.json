@@ -1,6 +1,7 @@
 {
 "settings":{
   "domain": "http://localhost:3000",
+  "encryption": true,
   "sessionSecret": "xzy",
   "loginUser": "admin",
   "loginPass": "admin",

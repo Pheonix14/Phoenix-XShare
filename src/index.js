@@ -104,11 +104,6 @@ app.post('/upload', authenticate, async (req, res) => {
     return res.status(400).send('No file was uploaded.');
   }
 const file = req.files.file;
-  const fileSizeInMB = file.size / (1024 * 1024);
-      
- if (fileSizeInMB > 500) {
-    return res.status(400).send('File upload limition is 500MB.');
- }
   
   const fileExtension = path.extname(file.name);
   let fileN = file.name.split('.')[0];
@@ -122,7 +117,7 @@ const file = req.files.file;
   const filePath = path.join(__dirname, 'uploads', fileName);
 
   const downloadLink = `${config.settings.domain}/download/${fileName}`;
-const qrdownloadLink = `${config.settings.domain}/qr-download/${fileName}`;
+const qrdownloadLink = `${config.settings.domain}/download-file/${fileName}`;
 
 // Get the current date and time in the local timezone
 const localDateTime = DateTime.local();
@@ -135,12 +130,15 @@ const formattedOutput = `
 Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)} IST (GMT+05:30)`;
 // Generate the QR code image
   const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
-  const remotePath = `${config.settings.remotePath}/${fileName}`;
-  
-  // Encrypt the file
-    const encryptedFilePath = encryptFile(file.data, filePath);
+    
+  if (config.settings.encryption) {
+     const encryptedFilePath = encryptFile(file.data, filePath);
+  } else {
+    fs.writeFileSync(filePath, file.data);
+  }
     const filesDB = db.table('filesDB');
-  await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username })
+    
+  await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username, encryption: `${config.settings.encryption}`});
   // Display the file name, download link, and QR code on the upload success page
   res.send(`
 <div class="Download">
@@ -207,49 +205,9 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
     res.status(500).send('File upload failed.');
   }
 });
+
+
 // Handle file download
-app.get('/qr-download/:fileName', async (req, res) => {
-  const { fileName } = req.params;
-  
-const filePath = path.join(__dirname, 'uploads', fileName);
-
-let foundFile;
-
-fs.access(filePath, fs.constants.F_OK, (err) => {
-  if (!err) {
-    foundFile = true;
-  } else {
-    foundFile = false;
-  }
-
-  if (!foundFile) {
-    return res.status(404).render('error', { errorMessage: 'File not found' });
-  }
-    
-  // Decrypt the file
-  const decryptedFilePath = decryptFile(filePath);
-
-res.set({
-    'Accept-Ranges': 'bytes',
-    'Content-Disposition': `attachment; filename="${fileName }"`,
-    'Transfer-Encoding': 'chunked',
-    'Expires': 0,
-    'Cache-Control': 'no-cache'
-  });
-  
-  res.download(decryptedFilePath, (err) => {
-    if (err) {
-      log(err, 'error');
-      return res.status(500).send('Error occurred while downloading the file.');
-    }
-
-    // Delete the decrypted file after download
-    log(`Decrypted ${fileName} is now deleting because it's downloaded.....`);
-    deleteFile(decryptedFilePath);
-  });
-});
-});
-
 app.get(`/download/:fileName`, async (req, res) => {
   
 const { fileName } = req.params;
@@ -282,45 +240,48 @@ const fileSizeInMB = filePath.size / (1024 * 1024);
 });
 
 app.get(`/download-file/:fileName`, async (req, res) => {
-const { fileName } = req.params;
+  const { fileName } = req.params;
   const db = await getDB();
 
   const filePath = path.join(__dirname, 'uploads', fileName);
-  
-let foundFile;
 
-fs.access(filePath, fs.constants.F_OK, (err) => {
-  if (!err) {
-    foundFile = true;
-  } else {
-    foundFile = false;
-  }
-  if (!foundFile) {
-    return res.status(404).render('error', { errorMessage: 'File not found' });
-  }
-  
-
-const decryptedFilePath = decryptFile(filePath);
-  
-res.set({
-    'Accept-Ranges': 'bytes',
-    'Content-Disposition': `attachment; filename="${fileName }"`,
-    'Transfer-Encoding': 'chunked',
-    'Expires': 0,
-    'Cache-Control': 'no-cache'
-  });
-  
-  // Send the file for download
-  res.download(decryptedFilePath, async (err) => {
+  fs.access(filePath, fs.constants.F_OK, async (err) => {
     if (err) {
-      log(err, 'error');
-      return res.status(500).send('Error occurred while downloading the file.');
+      return res.status(404).render('error', { errorMessage: 'File not found' });
     }
-    log(`Decrypted ${fileName} is now deleting because it's downloaded.....`);
-    deleteFile(decryptedFilePath)
+
+    const filesDB = db.table('filesDB');
+      let fileData = await filesDB.get(fileName);
+      console.log(fileData.encryption);
+      let downloableFile;
+
+      if (fileData.encryption === 'true') {
+        downloableFile = decryptFile(filePath);
+      } else {
+        downloableFile = filePath;
+      }
+
+      res.set({
+        'Accept-Ranges': 'bytes',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Transfer-Encoding': 'chunked',
+        'Expires': 0,
+        'Cache-Control': 'no-cache'
+      });
+
+      // Send the file for download
+      res.download(downloableFile, async (err) => {
+        if (err) {
+          log(err, 'error');
+          return res.status(500).send('Error occurred while downloading the file.');
+        }
+      if (fileData.encryption === 'true') {
+            log(`Decrypted ${fileName} is now deleting because it's downloaded.....`);
+    deleteFile(downloableFile)
+      }
    });
-});
-});
+  });
+}); 
 
 app.use((req, res, next) => {
   res.status(404).render('error', { errorMessage: 'Page not found' });

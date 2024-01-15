@@ -1,6 +1,5 @@
 // service-worker.js
-
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 
 if (workbox) {
   // Precache and serve the index.html file
