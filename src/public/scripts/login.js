@@ -32,17 +32,17 @@ loginForm.addEventListener('submit', async (event) => {
 });
 
 const passwordInput = document.getElementById('password');
-        const passwordToggle = document.getElementById('passwordToggle');
+const passwordToggle = document.getElementById('passwordToggle');
 
-        passwordToggle.addEventListener('click', () => {
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-       passwordToggle.textContent = 'Hide Password';
-            } else {
-                passwordInput.type = 'password';
-                passwordToggle.textContent = 'Show Password';
-            }
-        });
+passwordToggle.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordToggle.innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
+    } else {
+        passwordInput.type = 'password';
+        passwordToggle.innerHTML = '<i class="bi bi-eye-fill"></i>';
+    }
+});
 
 if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/scripts/serviceWorkers.js')

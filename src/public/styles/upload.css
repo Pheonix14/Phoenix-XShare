@@ -20,11 +20,11 @@
         h1 {
             font-size: 36px;
             margin: 20px 0;
-            color: #fff;
+            color: #f64a00;
         }
 
         .form-container {
-            width: 90%;
+            width: 100%;
             max-width: 320px;
             padding: 30px;
             background-color: #1e1e1e;
@@ -33,26 +33,10 @@
             text-align: center;
         }
 
-        .upload-button {
-            background-color: #4a90e2;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 15px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-        }
-
-        .upload-button:hover {
-            background-color: #357abd;
-        }
-
         #dragDropArea {
             width: 100%;
             min-height: 150px;
-            border: 2px dashed #4a90e2;
+            border: 2px dashed #f64a00;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -60,14 +44,14 @@
             align-items: center;
             margin-top: 20px;
             background-color: #1e1e1e;
-            color: #4a90e2;
+            color: #f64a00;
             font-weight: bold;
             cursor: pointer;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
 
         #dragDropArea.dragging {
-            border-color: #4a90e2;
+            border-color: #f64a00;
             background-color: #1e1e1e;
             color: #fff;
         }
@@ -75,11 +59,11 @@
         .footer {
             margin-top: 20px;
             font-size: 14px;
-            color: #00ff00;
+            color: #f64a00;
         }
 
         #downloadLink {
             margin-top: 20px;
             font-size: 14px;
-            color: #fff;
+            color: #fec107;
         }

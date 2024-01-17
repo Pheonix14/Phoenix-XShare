@@ -20,11 +20,11 @@
         h1 {
             font-size: 36px;
             margin: 20px 0;
-            color: #fff;
+            color: #f64a00;
         }
 
         .download-container {
-            width: 90%;
+            width: 100%;
             max-width: 320px;
             padding: 30px;
             background-color: #1e1e1e;
@@ -33,34 +33,15 @@
             text-align: center;
         }
 
-        .download-button {
-            background-color: #4a90e2;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 15px 30px;
-            font-size: 16px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-            display: block;
-            width: 75%; /* Make the button full width */
-        }
-
-        .download-button:hover {
-            background-color: #357abd;
-        }
-
         .footer {
             margin-top: 20px;
             font-size: 14px;
-            color: #fff;
+            color: #f64a00;
        } 
       p {
-        color: #fff;
+        color: #6bffc6;
       }
       h2 {
         font-size: 20px;
-        color: #3366CC
+        color: #fec107;
      } 

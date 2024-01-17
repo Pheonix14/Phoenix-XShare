@@ -12,8 +12,6 @@ Phoenix XShare is a private upload server of [Phoenix Share](https://github.com/
 
 - Encryption toggle on/off option: Users can choose whether to encrypt their files before uploading them, for extra security and privacy.
 
-- CDN for sharing file on WhatsApp and Discord: Users can share their files on popular messaging platforms, using a Content Delivery Network (CDN) that ensures fast and reliable delivery.
-
 - No external database and SFTP server needed: Phoenix XShare uses a local file system to store and manage files, eliminating the need for external dependencies and simplifying the setup process.
 
 - Easy to use: Phoenix XShare has a user-friendly interface that makes uploading and sharing files a breeze.
@@ -27,6 +25,7 @@ Phoenix XShare is a private upload server of [Phoenix Share](https://github.com/
 - Lightweight And Efficient: Phoenix XShare more lighter than Phoenix Share and more efficient.
 
 - More secure: Phoenix XShare has enhanced security measures, such as on-device encryption, database and storage.
+
 ## Prerequisites:
 
 - Node.js (LTS version): You need to have Node.js installed on your system to run Phoenix XShare. You can download it from [here](https://nodejs.org/en ).
@@ -52,16 +51,19 @@ npm install
 ```
 to install all the dependencies required for Phoenix XShare.
 
-Fill the configuration: Open the `/config/config.json`
- file and fill in the necessary configuration options, such as port, encryption key, domain, etc.
+Fill the configuration: 
+1. Rename the file example-config.json located in `/config/` to `config.json`.
+2. Open the `/config/config.json` file.
+3. Fill in the necessary configuration options, such as port, encryption toggle, domain, etc.
 
 Start the server: Run 
 ```js
 npm run start
 ```
-to start the Phoenix XShare server. You should see a message like Phoenix XShare is running on `http://localhost:3000` in your terminal.
+to start the Phoenix XShare server. You should see a message like Phoenix XShare is running on `http://localhost:3000` in your browser.
 
 Enjoy: Open your browser and go to `http://localhost:3000` to see Phoenix XShare in action. You can now upload and share files as you wish.
+
 ## License:
 
 Phoenix XShare is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. See the LICENSE file for more details.

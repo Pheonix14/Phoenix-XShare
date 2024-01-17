@@ -15,9 +15,7 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="msapplication-config" content="/browserconfig.xml">
 <meta name="theme-color" content="#121212">
-    <link href="
-https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
-" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/styles/login.css">
     <title>Phoenix XShare - Login</title>
@@ -31,9 +29,9 @@ https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
             <input type="text" id="username" name="username" class="input-field" placeholder="Username" required>
             <input type="password" id="password" name="password" class="input-field" placeholder="Password" required>
            <div class="passwordToggle-container">
-    <a id="passwordToggle" class="passwordToggle">Show Password</a>
+             <button type="button" id="passwordToggle" class="btn btn-outline-warning btn-sm"><i class="bi bi-eye-fill"></i></button>
            </div>
-            <button type="submit" class="login-button">
+            <button type="submit" class="btn btn-warning">
              <i class="bi bi-person-check"></i> Login
             </button>
         </form>
@@ -43,4 +41,5 @@ https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/tailwind.min.css
 </body>
   <script src="/scripts/login.js" type="module"></script>
   <script src="https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </html>

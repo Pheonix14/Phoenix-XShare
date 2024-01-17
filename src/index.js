@@ -167,7 +167,7 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
     <p>Uploaded By: ${username}</p>
     <p>Upload Time: ${formattedOutput}</p>
     <div class="download-link-container">
-    <button id="copyButton" data-download-link=${downloadLink} onclick="copyToClipboard(this)">Copy Download Link</button>
+    <button id="copyButton" class="btn btn-warning btn-sm" data-download-link=${downloadLink} onclick="copyToClipboard(this)">Copy Download Link</button>
 </div>
 
     <img src="${qrCodeImage}" alt="QR Code">
@@ -186,32 +186,19 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
     h2 {
         font-size: 24px;
         margin-bottom: 20px;
+        color: #fec107;
     }
 
     p {
         font-size: 16px;
         margin-bottom: 10px;
+        color: #6bffc6;
     }
 
     .download-link-container {
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-
-    button#copyButton {
-        background-color: #4a90e2; /* Sky blue color */
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 5px 10px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    button#copyButton:hover {
-        background-color: #357abd; /* Darker blue on hover */
     }
 
     img {
