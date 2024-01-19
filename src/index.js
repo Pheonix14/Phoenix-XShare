@@ -167,7 +167,7 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
     <p>Uploaded By: ${username}</p>
     <p>Upload Time: ${formattedOutput}</p>
     <div class="download-link-container">
-    <button id="copyButton" class="btn btn-warning btn-sm" data-download-link=${downloadLink} onclick="copyToClipboard(this)">Copy Download Link</button>
+    <button id="shareButton" class="btn btn-warning btn-sm" data-download-link=${downloadLink} onclick="shareButton(this)">Share Download Link</button>
 </div>
 
     <img src="${qrCodeImage}" alt="QR Code">

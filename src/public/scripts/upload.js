@@ -41,10 +41,19 @@ downloadLink.textContent = "File uploading is under progress.... Please don't cl
     });
 
 
-function copyToClipboard(button) {
+function shareButton(button) {
     const downloadLink = button.getAttribute('data-download-link');
 
-    const textArea = document.createElement('textarea');
+const shareBtn = document.getElementById('shareButton');
+
+shareBtn.onclick = async (filesArray) => {
+    if (navigator.canShare) {
+        navigator.share({
+            url: downloadLink,
+            title: 'Phoenix XShare',
+        })
+    } else {
+          const textArea = document.createElement('textarea');
     textArea.value = downloadLink;
 
     document.body.appendChild(textArea);
@@ -52,11 +61,13 @@ function copyToClipboard(button) {
     document.execCommand('copy');
     document.body.removeChild(textArea);
 
-    const copyButton = document.getElementById('copyButton');
-    copyButton.textContent = "Copied!";
+      shareBtn.textContent = "Link Copied!";
     setTimeout(() => {
-        copyButton.textContent = "Copy Download Link";
+          shareBtn.textContent = "Share Download Link";
     }, 3000); // Reset to "Copy Link" after 3 seconds
+    }
+}
+
 }
 
 if ('serviceWorker' in navigator) {
