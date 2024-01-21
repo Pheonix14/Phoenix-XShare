@@ -1,12 +1,12 @@
     const form = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
-    const downloadLink = document.getElementById('downloadLink');
+    const loading = document.getElementById('loading');
     const dragDropArea = document.getElementById('dragDropArea');
-
+    const container = document.getElementById('container');
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
-downloadLink.textContent = "File uploading is under progress.... Please don't close or refresh the tab";
+loading.textContent = "File uploading is under progress.... Please don't close or refresh the tab";
       
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
@@ -17,7 +17,7 @@ downloadLink.textContent = "File uploading is under progress.... Please don't cl
       })
       .then(response => response.text())
       .then(data => {
-        downloadLink.innerHTML = data;
+        container.innerHTML = data;
         form.reset();
       })
       .catch(error => {

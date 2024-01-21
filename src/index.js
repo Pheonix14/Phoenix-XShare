@@ -107,8 +107,8 @@ app.post('/upload', authenticate, async (req, res) => {
   const username = req.session.user;
   const db = await getDB();
   // Check if a file was uploaded
-  if (!req.files || !req.files.file) {
-    return res.status(400).send('No file was uploaded.');
+  if (!req.files.mediaFiles) {
+    return res.status(400).render('error', { errorMessage: 'No file was uploaded.' });;
   }
 const file = req.files.file;
   
@@ -160,56 +160,11 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
   await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username, encryption: `${config.settings.encryption}`, fileSize: fileSizeInMegabytes.toFixed(fileSizeInMegabytes < 1 ? 2 : 0)});
 });
   // Display the file name, download link, and QR code on the upload success page
-  res.send(`
-<div class="Download">
-    <h2>File uploaded successfully!</h2>
-    <p>File name: ${fileName}</p>
-    <p>Uploaded By: ${username}</p>
-    <p>Upload Time: ${formattedOutput}</p>
-    <div class="download-link-container">
-    <button id="shareButton" class="btn btn-warning btn-sm" data-download-link=${downloadLink} onclick="shareButton(this)">Share Download Link</button>
-</div>
-
-    <img src="${qrCodeImage}" alt="QR Code">
-</div>
-
-<style>
-    .Download {
-        text-align: center;
-        padding: 20px;
-        background-color: #1e1e1e;
-        border-radius: 10px;
-        box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
-        color: #fff;
-    }
-
-    h2 {
-        font-size: 24px;
-        margin-bottom: 20px;
-        color: #fec107;
-    }
-
-    p {
-        font-size: 16px;
-        margin-bottom: 10px;
-        color: #6bffc6;
-    }
-
-    .download-link-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    img {
-        padding: 5px;
-        width: 120px;
-    }
-</style>
-`);
+    res.render('uploaded', { fileName, downloadLink, qrCodeImage, uploader: username, uploadTime: formattedOutput });
+    
 } catch (err) {
     log(err, 'error');
-    res.status(500).send('File upload failed.');
+    return res.status(500).render('error', { errorMessage: 'File upload failed.' });
   }
 });
 
@@ -223,8 +178,9 @@ app.post('/webshare', authenticate, async (req, res) => {
     
     if (!req.files.mediaFiles) {
     return res.status(400).render('error', { errorMessage: 'No file was uploaded.' });;
+    }
     if (Object.keys(req.files).length !== 1) {
-      return return res.status(400).render('error', { errorMessage: 'Only one file can be uploaded at a time.' });
+      return res.status(400).render('error', { errorMessage: 'Only one file can be uploaded at a time.' });
     }
     
 const file = req.files.mediaFiles;
@@ -278,11 +234,11 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
 });
   // Display the file name, download link, and QR code on the upload success page
   res.render('uploaded', { fileName, downloadLink, qrCodeImage, uploader: username, uploadTime: formattedOutput });
-} catch (err) {
+  } catch (err) {
     log(err, 'error');
     return res.status(500).render('error', { errorMessage: 'File upload failed.' });
   }
-});
+}); 
 
 // Handle file download
 app.get(`/download/:fileName`, async (req, res) => {
