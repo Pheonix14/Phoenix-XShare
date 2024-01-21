@@ -107,7 +107,7 @@ app.post('/upload', authenticate, async (req, res) => {
   const username = req.session.user;
   const db = await getDB();
   // Check if a file was uploaded
-  if (!req.files.mediaFiles) {
+    if (!req.files || !req.files.file) {
     return res.status(400).render('error', { errorMessage: 'No file was uploaded.' });;
   }
 const file = req.files.file;
@@ -128,7 +128,7 @@ const shortID = Array.from({ length: crypto.randomInt(5, 11) }, () => characters
   const filePath = path.join(__dirname, 'uploads', fileName);
 
   const downloadLink = `${config.settings.domain}/download/${fileName}`;
-const qrdownloadLink = `${config.settings.domain}/download-file/${fileName}`;
+const qrdownloadLink = `${config.settings.domain}/cdn/${fileName}`;
 
 // Get the current date and time in the local timezone
 const localDateTime = DateTime.local();
@@ -201,7 +201,7 @@ const shortID = Array.from({ length: crypto.randomInt(5, 11) }, () => characters
   const filePath = path.join(__dirname, 'uploads', fileName);
 
   const downloadLink = `${config.settings.domain}/download/${fileName}`;
-const qrdownloadLink = `${config.settings.domain}/download-file/${fileName}`;
+const qrdownloadLink = `${config.settings.domain}/cdn/${fileName}`;
 
 // Get the current date and time in the local timezone
 const localDateTime = DateTime.local();
@@ -271,7 +271,7 @@ fs.access(filePath, fs.constants.F_OK, async (err) => {
 });
 });
 
-app.get(`/download-file/:fileName`, async (req, res) => {
+app.get(`/cdn/:fileName`, async (req, res) => {
   const { fileName } = req.params;
   const db = await getDB();
 
@@ -308,7 +308,6 @@ app.get(`/download-file/:fileName`, async (req, res) => {
           return res.status(500).render('error', { errorMessage: 'Error occurred while downloading the file.' });
         }
       if (fileData.encryption === 'true') {
-            log(`Decrypted ${fileName} is now deleting because it's downloaded.....`);
     deleteFile(downloableFile)
       }
    });
@@ -324,8 +323,6 @@ function deleteFile(filePath) {
   fs.unlink(filePath, (err) => {
     if (err) {
       log(err, 'error');
-    } else {
-      log('File is deleted successfully.');
     }
   });
 }
