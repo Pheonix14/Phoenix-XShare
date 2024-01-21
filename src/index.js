@@ -222,10 +222,9 @@ app.post('/webshare', authenticate, async (req, res) => {
   // Check if a file was uploaded
     
     if (!req.files.mediaFiles) {
-    return res.status(400).send('No file was uploaded.');
-  }
+    return res.status(400).render('error', { errorMessage: 'No file was uploaded.' });;
     if (Object.keys(req.files).length !== 1) {
-      return res.status(400).send('Only one file can be uploaded at a time.');
+      return return res.status(400).render('error', { errorMessage: 'Only one file can be uploaded at a time.' });
     }
     
 const file = req.files.mediaFiles;
@@ -281,7 +280,7 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
   res.render('uploaded', { fileName, downloadLink, qrCodeImage, uploader: username, uploadTime: formattedOutput });
 } catch (err) {
     log(err, 'error');
-    res.status(500).send('File upload failed.');
+    return res.status(500).render('error', { errorMessage: 'File upload failed.' });
   }
 });
 
@@ -350,7 +349,7 @@ app.get(`/download-file/:fileName`, async (req, res) => {
       res.download(downloableFile, async (err) => {
         if (err) {
           log(err, 'error');
-          return res.status(500).send('Error occurred while downloading the file.');
+          return res.status(500).render('error', { errorMessage: 'Error occurred while downloading the file.' });
         }
       if (fileData.encryption === 'true') {
             log(`Decrypted ${fileName} is now deleting because it's downloaded.....`);
