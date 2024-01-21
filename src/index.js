@@ -214,6 +214,77 @@ Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLo
 });
 
 
+app.post('/webshare', authenticate, async (req, res) => {
+  
+  try { 
+  const username = req.session.user;
+  const db = await getDB();
+  // Check if a file was uploaded
+    
+    if (!req.files.mediaFiles) {
+    return res.status(400).send('No file was uploaded.');
+  }
+    if (Object.keys(req.files).length !== 1) {
+      return res.status(400).send('Only one file can be uploaded at a time.');
+    }
+    
+const file = req.files.mediaFiles;
+    
+  const fileExtension = path.extname(file.name);
+  let fileN = file.name.split('.')[0];
+  let fileN2;
+  if (fileN.includes(' ')) {
+  fileN2 = fileN.replace(/ /g, '');
+  } else {
+     fileN2 = fileN;
+  }
+
+const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const shortID = Array.from({ length: crypto.randomInt(5, 11) }, () => characters[crypto.randomInt(characters.length)]).join('');
+    
+  const fileName = `${fileN2}-${shortID}${fileExtension}`;
+  const filePath = path.join(__dirname, 'uploads', fileName);
+
+  const downloadLink = `${config.settings.domain}/download/${fileName}`;
+const qrdownloadLink = `${config.settings.domain}/download-file/${fileName}`;
+
+// Get the current date and time in the local timezone
+const localDateTime = DateTime.local();
+
+// Convert to IST (Indian Standard Time)
+const istDateTime = localDateTime.setZone('Asia/Kolkata');
+
+// Format the output
+const formattedOutput = `
+Date: ${istDateTime.toLocaleString(DateTime.DATE_FULL)} Time: ${istDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)} IST (GMT+05:30)`;
+// Generate the QR code image
+  const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
+    
+  if (config.settings.encryption) {
+     const encryptedFilePath = encryptFile(file.data, filePath);
+  } else {
+    fs.writeFileSync(filePath, file.data);
+  }
+    fs.stat(filePath, async (err, stats) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  const fileSizeInBytes = stats.size;
+  const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+
+    const filesDB = db.table('filesDB');
+    
+  await filesDB.set(fileName, {uploadTime: formattedOutput, uploader: username, encryption: `${config.settings.encryption}`, fileSize: fileSizeInMegabytes.toFixed(fileSizeInMegabytes < 1 ? 2 : 0)});
+});
+  // Display the file name, download link, and QR code on the upload success page
+  res.render('uploaded', { fileName, downloadLink, qrCodeImage, uploader: username, uploadTime: formattedOutput });
+} catch (err) {
+    log(err, 'error');
+    res.status(500).send('File upload failed.');
+  }
+});
+
 // Handle file download
 app.get(`/download/:fileName`, async (req, res) => {
   
