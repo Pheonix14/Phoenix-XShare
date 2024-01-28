@@ -3,7 +3,6 @@ import fileUpload from "express-fileupload";
 import fs from 'fs';
 import path from 'path';
 import qrCode from 'qrcode';
-import bcrypt from 'bcrypt';
 import session from 'express-session';
 import crypto from 'crypto';
 import ejs from 'ejs';
