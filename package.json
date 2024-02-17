@@ -21,6 +21,7 @@
     "express-session": "^1.17.3",
     "luxon": "^3.4.3",
     "qrcode": "^1.5.3",
-    "quick.db": "^9.1.7"
+    "quick.db": "^9.1.7",
+    "write-file-atomic": "^5.0.1"
   }
 }

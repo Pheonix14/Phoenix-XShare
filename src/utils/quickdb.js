@@ -1,4 +1,4 @@
-import { QuickDB } from 'quick.db';
+import { QuickDB, JSONDriver } from "quick.db";
 import log from './console.js';
 import config from './../../config/config.json' assert { type: "json" };
 
@@ -7,9 +7,8 @@ let quickDB;
 async function getDB() {
   if (!quickDB) {
       try {
-    quickDB = new QuickDB({
-      filePath: "./src/utils/db/database.sqlite"
-});
+        const jsonDriver = new JSONDriver();
+    quickDB = new QuickDB({ driver: jsonDriver });
       } catch (error) {
         log(error);
         throw error;
