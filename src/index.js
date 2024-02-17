@@ -8,7 +8,7 @@ import crypto from 'crypto';
 import ejs from 'ejs';
 import cookieParser from 'cookie-parser';
 import { DateTime } from 'luxon';
-import SQLiteStore from 'connect-sqlite3';
+import MemoryStore from 'memorystore';
 import log from './utils/console.js';
 import getDB from './utils/quickdb.js';
 import config from '../config/config.json' assert { type: "json" };
@@ -23,18 +23,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'public'));
 app.use(express.json());
 
-
 app.use(cookieParser()); // Use cookie-parser middleware
+const MemoryStoreSession = MemoryStore(session);
 
-const SQLiteStoreInstance = SQLiteStore(session);
+const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const sessionSecret = Array.from({ length: crypto.randomInt(5, 11) }, () => characters[crypto.randomInt(characters.length)]).join('');
 
 app.use(session({
-  store: new SQLiteStoreInstance({
-    db: 'sessionsDB.sqlite',
-    table: 'sessions',
-    dir: './src/utils/db/'
+  store: new MemoryStoreSession({  checkPeriod: 86400000
   }),
-  secret: config.settings.sessionSecret,
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: true,
   cookie: { maxAge: 15 * 24 * 60 * 60 * 1000 }
