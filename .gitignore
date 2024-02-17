@@ -1,5 +1,6 @@
 node_modules
 .replit
+quickdb.json
 replit.nix
 config.json
 database.sqlite
