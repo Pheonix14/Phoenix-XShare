@@ -3,5 +3,3 @@ node_modules
 quickdb.json
 replit.nix
 config.json
-database.sqlite
-sessionsDB.sqlite
