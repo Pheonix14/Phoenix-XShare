@@ -140,9 +140,9 @@ app.post("/upload", authenticate, async (req, res) => {
 
     // Format the output
     const formattedOutput = `
-Date: ${istDateTime.toLocaleString(
+Date: ${localDateTime.toLocaleString(
       DateTime.DATE_FULL,
-    )} Time: ${istDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)}`;
+    )} Time: ${localDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)}`;
     // Generate the QR code image
     const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
 
@@ -229,9 +229,9 @@ app.post("/webshare", authenticate, async (req, res) => {
 
     // Format the output
     const formattedOutput = `
-Date: ${istDateTime.toLocaleString(
+Date: ${localDateTime.toLocaleString(
       DateTime.DATE_FULL,
-    )} Time: ${istDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)}`;
+    )} Time: ${localDateTime.toLocaleString(DateTime.TIME_24_SIMPLE)}`;
     // Generate the QR code image
     const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
 
