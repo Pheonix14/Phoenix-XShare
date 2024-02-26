@@ -13,14 +13,15 @@
         }
 
         .logo {
-            max-width: 150px;
+            max-width: 130px;
             height: auto;
         }
 
         h1 {
             font-size: 36px;
+                font-family: 'Anton', sans-serif;
             margin: 20px 0;
-            color: #f64a00;
+            color: #ffffff;
         }
 
         .form-container {
@@ -36,7 +37,7 @@
         #dragDropArea {
             width: 100%;
             min-height: 150px;
-            border: 2px dashed #f64a00;
+            border: 2px dashed #ffffff;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -44,14 +45,15 @@
             align-items: center;
             margin-top: 20px;
             background-color: #1e1e1e;
-            color: #f64a00;
+            color: #ffffff;
             font-weight: bold;
+              font-family: 'Roboto Flex', sans-serif;
             cursor: pointer;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
 
         #dragDropArea.dragging {
-            border-color: #f64a00;
+            border-color: #ffffff;
             background-color: #1e1e1e;
             color: #fff;
         }
@@ -59,11 +61,13 @@
         .footer {
             margin-top: 20px;
             font-size: 14px;
-            color: #f64a00;
+            font-family: 'Roboto Flex', sans-serif;
+            color: #ffffff;
         }
 
-        #loading {
+        .loading {
             margin-top: 20px;
+              font-family: 'Roboto Flex', sans-serif;
             font-size: 14px;
-            color: #fec107;
+            color: #ffffff;
         }

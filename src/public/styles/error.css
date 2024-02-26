@@ -19,7 +19,8 @@
         }
 
         h1 {
-            color: #f64a00;
+            color: #ffffff;
+                font-family: 'Anton', sans-serif;
             font-size: 36px;
             margin: 20px 0;
         }
@@ -36,6 +37,7 @@
 
         .error-message {
             color: #ff0000;
+              font-family: 'Roboto Flex', sans-serif;
             font-size: 24px;
             margin-bottom: 20px;
         }
