@@ -35,7 +35,7 @@ To run Phoenix XShare locally, follow these steps:
 
 Clone the repository: Run
 ```bash
-git clone https://github.com/Phoenix-OPTE/Phoenix-XShare.git
+git clone https://github.com/Pheonix14/Phoenix-XShare.git
 ```
  in your terminal to clone the Phoenix XShare repository to your local machine.
 
