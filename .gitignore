@@ -4,5 +4,4 @@ uploads
 decrypted
 replit.nix
 config.json
-sessionsDB.sqlite
 database.sqlite

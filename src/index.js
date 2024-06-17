@@ -32,8 +32,8 @@ const SQLiteStoreInstance = SQLiteStore(session);
 app.use(
   session({
     store: new SQLiteStoreInstance({
-    db: 'sessionsDB.sqlite',
-    table: 'sessions',
+    db: 'database.sqlite',
+    table: 'sessionDB',
     dir: './src/database/'
     }),
     secret: await generateRandomSecret(),
@@ -152,7 +152,7 @@ Date: ${localDateTime.toLocaleString(
     const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
 
     if (config.settings.encryption) {
-      const encryptedFilePath = encryptFile(file.data, filePath);
+      const encryptedFilePath = await encryptFile(file.data, filePath);
     } else {
       fs.writeFileSync(filePath, file.data);
     }
@@ -241,7 +241,7 @@ Date: ${localDateTime.toLocaleString(
     const qrCodeImage = await qrCode.toDataURL(qrdownloadLink);
 
     if (config.settings.encryption) {
-      const encryptedFilePath = encryptFile(file.data, filePath);
+      const encryptedFilePath = await encryptFile(file.data, filePath);
     } else {
       fs.writeFileSync(filePath, file.data);
     }
@@ -329,7 +329,7 @@ app.get(`/cdn/:fileName`, async (req, res) => {
     let downloableFile;
 
     if (fileData.encryption === "true") {
-      downloableFile = decryptFile(filePath);
+      downloableFile = await decryptFile(filePath);
     } else {
       downloableFile = filePath;
     }
@@ -383,52 +383,49 @@ function generateRandomSecret() {
 }
 
 // Encryption function
-function encryptFile(fileData, filePath) {
-  const key = crypto
-    .createHash("sha256")
-    .update(path.basename(filePath))
-    .digest("hex")
-    .slice(0, 32);
-  const iv = crypto
-    .createHash("sha256")
-    .update(path.basename(filePath))
-    .digest("hex")
-    .slice(0, 16);
+async function encryptFile(fileData, filePath) {
+  const key = crypto.randomBytes(32); // Generate a random 32-byte key
+  const iv = crypto.randomBytes(16);  // Generate a random 16-byte IV
 
-  const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
 
-  const encryptedData = Buffer.concat([
-    cipher.update(fileData),
-    cipher.final(),
-  ]);
+  const encryptedData = Buffer.concat([cipher.update(fileData), cipher.final()]);
 
   fs.writeFileSync(filePath, encryptedData);
+
+  // Store the key and IV in the database using the filePath as the key
+  const db = await getDB();
+  const encryptionDB = db.table("encryptionDB");
+  
+  await encryptionDB.set(`${filePath}-key`, key.toString('hex'));
+  await encryptionDB.set(`${filePath}-iv`, iv.toString('hex'));
 
   return filePath;
 }
 
-function decryptFile(filePath) {
+// Decryption function
+async function decryptFile(filePath) {
   const encryptedData = fs.readFileSync(filePath);
+  
+  // Retrieve the key and IV from the database using the filePath as the key
+  const db = await getDB();
+  const encryptionDB = db.table("encryptionDB"); 
+  
+  const keyHex = await encryptionDB.get(`${filePath}-key`);
+  const ivHex = await encryptionDB.get(`${filePath}-iv`);
 
-  const key = crypto
-    .createHash("sha256")
-    .update(path.basename(filePath))
-    .digest("hex")
-    .slice(0, 32);
-  const iv = crypto
-    .createHash("sha256")
-    .update(path.basename(filePath))
-    .digest("hex")
-    .slice(0, 16);
+  if (!keyHex || !ivHex) {
+    throw new Error('Key or IV not found in database');
+  }
 
-  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+  const key = Buffer.from(keyHex, 'hex');
+  const iv = Buffer.from(ivHex, 'hex');
 
-  const decryptedData = Buffer.concat([
-    decipher.update(encryptedData),
-    decipher.final(),
-  ]);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
 
-  const decryptedFilePath = filePath.replace("/uploads/", "/decrypted/");
+  const decryptedData = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
+
+  const decryptedFilePath = filePath.replace('/uploads/', '/decrypted/');
   fs.writeFileSync(decryptedFilePath, decryptedData);
 
   return decryptedFilePath;
