@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import qrCode from "qrcode";
 import session from "express-session";
+import SQLiteStore from "connect-sqlite3";
 import crypto from "crypto";
 import ejs from "ejs";
 import cookieParser from "cookie-parser";
@@ -26,11 +27,15 @@ app.use(express.json());
 
 app.use(cookieParser()); // Use cookie-parser middleware
 
-const MemoryStore = session.MemoryStore;
+const SQLiteStoreInstance = SQLiteStore(session);
 
 app.use(
   session({
-    store: new MemoryStore(),
+    store: new SQLiteStoreInstance({
+    db: 'sessionsDB.sqlite',
+    table: 'sessions',
+    dir: './src/database/'
+    }),
     secret: await generateRandomSecret(),
     resave: false,
     saveUninitialized: true,

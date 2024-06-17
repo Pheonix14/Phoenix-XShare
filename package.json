@@ -11,15 +11,16 @@
   "author": "Pheonix",
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^11.0.0",
     "chalk": "^5.3.0",
+    "connect-sqlite3": "^0.9.15",
     "cookie-parser": "^1.4.6",
-    "ejs": "^3.1.9",
-    "express": "^4.18.2",
-    "express-fileupload": "^1.4.3",
-    "express-session": "^1.17.3",
-    "luxon": "^3.4.3",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.0",
+    "express-session": "^1.18.0",
+    "luxon": "^3.4.4",
     "qrcode": "^1.5.3",
-    "quick.db": "^9.1.7",
-    "write-file-atomic": "^5.0.1"
+    "quick.db": "^9.1.7"
   }
 }
