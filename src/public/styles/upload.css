@@ -19,7 +19,9 @@
 
         h1 {
             font-size: 36px;
-                font-family: 'Anton', sans-serif;
+            font-family: "Ubuntu", sans-serif;
+            font-style: Bold;
+            font-weight: 700;
             margin: 20px 0;
             color: #ffffff;
         }

@@ -9,7 +9,7 @@ downloadLink.addEventListener('click', async (event) => {
 
     // Make a GET request to download the file
     try {
-        const response = await fetch(`/download-file/${fileName}`);
+        const response = await fetch(`/cdn/${fileName}`);
         if (response.ok) {
             // Form submission was successful, hide the error message
             errorElement.style.display = 'none';
@@ -26,13 +26,3 @@ downloadLink.addEventListener('click', async (event) => {
         errorElement.style.display = 'block';
     }
 });
-
-if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/scripts/serviceWorkers.js')
-                .then(registration => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch(error => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }

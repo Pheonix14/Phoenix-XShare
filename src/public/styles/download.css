@@ -21,7 +21,9 @@
             font-size: 36px;
             margin: 20px 0;
             color: #ffffff;
-            font-family: 'Anton', sans-serif;
+            font-family: "Ubuntu", sans-serif;
+            font-style: Bold;
+            font-weight: 700;
         }
 
         .download-container {
@@ -46,6 +48,8 @@
       }
       h2 {
         font-size: 20px;
-            font-family: 'Anton', sans-serif;
+          font-family: "Ubuntu", sans-serif;
+          font-style: Bold;
+          font-weight: 700;
         color: #ffffff;
      } 

@@ -24,7 +24,9 @@
         font-size: 24px;
         margin-bottom: 20px;
         color: #ffffff;
-        font-family: 'Anton', sans-serif;
+        font-family: "Ubuntu", sans-serif;
+        font-style: Bold;
+        font-weight: 700;
     }
 
     p {
