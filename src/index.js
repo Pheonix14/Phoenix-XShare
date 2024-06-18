@@ -365,7 +365,7 @@ app.get(`/cdn/:fileName`, async (req, res) => {
   const apiLink = `${config.settings.domain}/api/${fileName}`;
   const cdnLink = `${config.settings.domain}/cdn/${fileName}`;
   
- const supportedExtensions = [
+ const imageFileExtensions = [
     ".jpg",
     ".jpeg",
     ".png",
@@ -377,9 +377,25 @@ app.get(`/cdn/:fileName`, async (req, res) => {
     ".svg",
     ".ico"
 ];
-
-if (supportedExtensions.some(extension => fileName.endsWith(extension))) {
+const videoFileExtensions = [
+    ".mp4",
+    ".avi",
+    ".mkv",
+    ".mov",
+    ".wmv",
+    ".flv",
+    ".webm",
+    ".mpg",
+    ".mpeg",
+    ".m4v",
+    ".3gp",
+    ".ogg"
+];
+  
+if (imageFileExtensions.some(extension => fileName.endsWith(extension))) {
     res.render("cdn", { fileName, apiLink, cdnLink })
+} else if(videoFileExtensions.some(extension => fileName.endsWith(extension))){
+  res.render("cdn-video", { fileName, apiLink, cdnLink })
 } else {
     res.status(500).render("error", { errorMessage: "CDN doesn't suuport this file type." });
 }
