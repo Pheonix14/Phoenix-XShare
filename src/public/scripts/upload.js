@@ -62,7 +62,35 @@ shareBtn.onclick = async (filesArray) => {
 
       shareBtn.textContent = "Link Copied!";
     setTimeout(() => {
-          shareBtn.textContent = "Share Download Link";
+          shareBtn.textContent = "Download Link";
+    }, 3000); // Reset to "Copy Link" after 3 seconds
+    }
+}
+
+}
+
+function cdnButton(button) {
+    const downloadLink = button.getAttribute('data-cdn-link');
+
+const shareBtn = document.getElementById('cdnButton');
+
+shareBtn.onclick = async (filesArray) => {
+    if (navigator.canShare) {
+        navigator.share({
+            url: downloadLink, 
+        })
+    } else {
+          const textArea = document.createElement('textarea');
+    textArea.value = downloadLink;
+
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+
+      shareBtn.textContent = "Link Copied!";
+    setTimeout(() => {
+          shareBtn.textContent = "CDN Link";
     }, 3000); // Reset to "Copy Link" after 3 seconds
     }
 }

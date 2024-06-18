@@ -32,7 +32,7 @@ const SQLiteStoreInstance = SQLiteStore(session);
 app.use(
   session({
     store: new SQLiteStoreInstance({
-    db: 'database.sqlite',
+    db: 'sessionDB.sqlite',
     table: 'sessionDB',
     dir: './src/database/'
     }),
@@ -138,8 +138,8 @@ app.post("/upload", authenticate, async (req, res) => {
     const filePath = path.join(__dirname, "uploads", fileName);
 
     const downloadLink = `${config.settings.domain}/download/${fileName}`;
-    const qrdownloadLink = `${config.settings.domain}/cdn/${fileName}`;
-
+    const qrdownloadLink = `${config.settings.domain}/api/${fileName}`;
+    const cdnLink = `${config.settings.domain}/cdn/${fileName}`;
     // Get the current date and time in the local timezone
     const localDateTime = DateTime.local();
 
@@ -177,6 +177,7 @@ Date: ${localDateTime.toLocaleString(
     res.render("uploaded", {
       fileName,
       downloadLink,
+      cdnLink,
       qrCodeImage,
       uploader: username,
       uploadTime: formattedOutput,
@@ -227,8 +228,8 @@ app.post("/webshare", authenticate, async (req, res) => {
     const filePath = path.join(__dirname, "uploads", fileName);
 
     const downloadLink = `${config.settings.domain}/download/${fileName}`;
-    const qrdownloadLink = `${config.settings.domain}/cdn/${fileName}`;
-
+    const qrdownloadLink = `${config.settings.domain}/api/${fileName}`;
+    const cdnLink = `${config.settings.domain}/cdn/${fileName}`;
     // Get the current date and time in the local timezone
     const localDateTime = DateTime.local();
 
@@ -266,6 +267,7 @@ Date: ${localDateTime.toLocaleString(
     res.render("uploaded", {
       fileName,
       downloadLink,
+      cdnLink,
       qrCodeImage,
       uploader: username,
       uploadTime: formattedOutput,
@@ -310,7 +312,7 @@ app.get(`/download/:fileName`, async (req, res) => {
   });
 });
 
-app.get(`/cdn/:fileName`, async (req, res) => {
+app.get(`/api/:fileName`, async (req, res) => {
   const { fileName } = req.params;
   const db = await getDB();
 
@@ -325,7 +327,7 @@ app.get(`/cdn/:fileName`, async (req, res) => {
 
     const filesDB = db.table("filesDB");
     let fileData = await filesDB.get(fileName);
-    console.log(fileData.encryption);
+    
     let downloableFile;
 
     if (fileData.encryption === "true") {
@@ -356,6 +358,32 @@ app.get(`/cdn/:fileName`, async (req, res) => {
     });
   });
 });
+
+app.get(`/cdn/:fileName`, async (req, res) => {
+  
+  const { fileName } = req.params;
+  const apiLink = `${config.settings.domain}/api/${fileName}`;
+  const cdnLink = `${config.settings.domain}/cdn/${fileName}`;
+  
+ const supportedExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".tif",
+    ".webp",
+    ".svg",
+    ".ico"
+];
+
+if (supportedExtensions.some(extension => fileName.endsWith(extension))) {
+    res.render("cdn", { fileName, apiLink, cdnLink })
+} else {
+    res.status(500).render("error", { errorMessage: "CDN doesn't suuport this file type." });
+}
+ });
 
 app.use((req, res, next) => {
   res.status(404).render("error", { errorMessage: "Page not found" });

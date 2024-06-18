@@ -9,7 +9,7 @@ downloadLink.addEventListener('click', async (event) => {
 
     // Make a GET request to download the file
     try {
-        const response = await fetch(`/cdn/${fileName}`);
+        const response = await fetch(`/api/${fileName}`);
         if (response.ok) {
             // Form submission was successful, hide the error message
             errorElement.style.display = 'none';
