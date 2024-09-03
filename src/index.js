@@ -31,7 +31,7 @@ app.use(
   session({
     store: MongoStore.create({
       mongoUrl: config.settings.mongoURI,
-      dbName: "sessions",
+      dbName: "phoenix-xshare",
       ttl: 14 * 24 * 60 * 60,
     }),
     secret: await generateRandomSecret(),

@@ -10,7 +10,7 @@ async function getDB() {
       const client = new MongoClient(config.settings.mongoURI);
       await client.connect();
       log(`Connected to MongoDB server`);
-      mongoDB = client.db("phoenix-share");
+      mongoDB = client.db("phoenix-xshare");
     } catch (error) {
       log(error);
       throw error;
