@@ -38,18 +38,20 @@
 
         .footer {
             margin-top: 20px;
-              font-family: 'Roboto Flex', sans-serif;
+            font-family: 'Roboto Flex', sans-serif;
             font-size: 14px;
             color: #ffffff;
-       } 
-      p {
-        color: #ffffff;
-          font-family: 'Roboto Flex', sans-serif;
-      }
-      h2 {
-        font-size: 20px;
-          font-family: "Ubuntu", sans-serif;
-          font-style: Bold;
-          font-weight: 700;
-        color: #ffffff;
-     } 
+        }
+
+        p {
+            color: #ffffff;
+            font-family: 'Roboto Flex', sans-serif;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-family: "Ubuntu", sans-serif;
+            font-style: Bold;
+            font-weight: 700;
+            color: #ffffff;
+        }

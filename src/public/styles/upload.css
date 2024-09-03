@@ -49,7 +49,7 @@
             background-color: #1e1e1e;
             color: #ffffff;
             font-weight: bold;
-              font-family: 'Roboto Flex', sans-serif;
+            font-family: 'Roboto Flex', sans-serif;
             cursor: pointer;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
@@ -69,7 +69,7 @@
 
         .loading {
             margin-top: 20px;
-              font-family: 'Roboto Flex', sans-serif;
+            font-family: 'Roboto Flex', sans-serif;
             font-size: 14px;
             color: #ffffff;
         }

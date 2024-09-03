@@ -1,14 +1,15 @@
     body {
-            background-color: #121212;
-            font-family: Arial, sans-serif;
-} 
+        background-color: #121212;
+        font-family: Arial, sans-serif;
+    }
+
     .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
     }
 
     .Download {
@@ -31,7 +32,7 @@
 
     p {
         font-size: 16px;
-          font-family: 'Roboto Flex', sans-serif;
+        font-family: 'Roboto Flex', sans-serif;
         margin-bottom: 10px;
         color: #ffffff;
     }
@@ -46,9 +47,10 @@
         padding: 5px;
         width: 120px;
     }
+
     .footer {
-            margin-top: 20px;
-              font-family: 'Roboto Flex', sans-serif;
-            font-size: 14px;
-            color: #ffffff;
+        margin-top: 20px;
+        font-family: 'Roboto Flex', sans-serif;
+        font-size: 14px;
+        color: #ffffff;
     }
