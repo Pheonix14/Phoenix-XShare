@@ -1,11 +1,9 @@
 {
-  "settings": {
-    "domain": "http://localhost:3000",
-    "https": false,
-    "mongoURI": "",
-    "encryption": true,
-    "loginUser": "admin",
-    "loginPass": "admin",
-    "port": 3000
-  }
+"settings":{
+  "domain": "http://localhost:3000",
+  "encryption": true,
+  "loginUser": "admin",
+  "loginPass": "admin",
+  "port": 3000
+           }
 }

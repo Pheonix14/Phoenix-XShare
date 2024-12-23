@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- HTML Meta Tags -->
-  <title>Phoenix XShare CDN</title>
+  <title>Phoenix XShare - Viewer</title>
   <!-- Facebook Meta Tags -->
-  <meta property="og:url" content="<%= cdnLink %>">
+  <meta property="og:url" content="<%= viewLink %>">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Phoenix XShare CDN">
+  <meta property="og:title" content="Phoenix XShare">
   <meta property="og:description" content="Phoenix XShare is a web application that allows users to upload and share files easily and securely.
 Filename: <%= fileName %>">
-  <meta property="og:video" content="<%= apiLink %>">
-  <meta property="og:video:width" content="1200" />
-  <meta property="og:video:height" content="630" />
+  <meta property="og:image" content="<%= apiLink %>">
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Phoenix XShare CDN">
+  <meta name="twitter:title" content="Phoenix XShare">
   <meta name="twitter:description" content="Phoenix XShare is a web application that allows users to upload and share files easily and securely.
 FileName: <%= fileName %>">
-  <meta name="twitter:video" content="<%= apiLink %>">
-  <meta property="twitter :video:width" content="1200" />
-  <meta property="twitter:video:height" content="630" />
+  <meta name="twitter:image" content="<%= apiLink %>">
+  <meta property="twitter :image:width" content="1200" />
+  <meta property="twitter:image:height" content="630" />
   <!-- Meta Tags Generated via https://www.opengraph.xyz -->
-
+  
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -49,9 +49,7 @@ FileName: <%= fileName %>">
     <div class="cdn-container">
         <p class="filename"><%= fileName %></p>
     </br>
-      <video class="media" controls>
-  <source src="<%= apiLink %>">
-      </video>
+      <img class="media" src="<%= apiLink %>" alt="Media">
     </br>
     </br>
         <a href="<%= apiLink %>" class="btn btn-light"><i class="bi bi-cloud-arrow-down-fill"></i> Download</a>

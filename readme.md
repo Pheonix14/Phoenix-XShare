@@ -1,4 +1,4 @@
-![Logo](./src/public/icons/logo-trans.png)
+![Logo](https://media.discordapp.net/attachments/1152856250460160022/1195646381793222656/1704471806240.png)
 # Phoenix XShare
 
 Phoenix XShare is a private upload server of [Phoenix Share](https://github.com/Pheonix14/Phoenix-Share), a web application that allows users to upload and share files easily and securely. It is a fork of the Phoenix Share repository, with some additional features and improvements.
