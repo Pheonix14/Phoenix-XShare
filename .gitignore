@@ -3,7 +3,4 @@ node_modules
 uploads
 decrypted
 replit.nix
-config.json
-json.sqlite
-database.sqlite
-sessionDB.sqlite
+quickdb.json

@@ -5,7 +5,7 @@
   "description": "",
   "main": "/src/index.js",
   "scripts": {
-    "start": "node --no-warnings ./src/index.js"
+    "start": "node ./src/index.js"
   },
   "keywords": [],
   "author": "Pheonix",

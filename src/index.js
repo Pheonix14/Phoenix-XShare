@@ -11,7 +11,7 @@ import { DateTime } from "luxon";
 import { createServer } from "http";
 import log from "./utils/console.js";
 import getDB from "./utils/quickdb.js";
-import config from "../config/config.json" assert { type: "json" };
+import config from "../config/config.js";
 
 const app = express();
 const server = createServer(app);

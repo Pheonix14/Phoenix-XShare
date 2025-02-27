@@ -1,9 +1,0 @@
-{
-"settings":{
-  "domain": "http://localhost:3000",
-  "encryption": true,
-  "loginUser": "admin",
-  "loginPass": "admin",
-  "port": 3000
-           }
-}
