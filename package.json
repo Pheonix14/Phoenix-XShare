@@ -11,7 +11,6 @@
   "author": "Pheonix",
   "license": "MIT",
   "dependencies": {
-    "better-sqlite3": "^11.4.0",
     "chalk": "^5.3.0",
     "cookie-parser": "^1.4.7",
     "ejs": "^3.1.10",
@@ -20,6 +19,7 @@
     "express-session": "^1.18.1",
     "luxon": "^3.5.0",
     "qrcode": "^1.5.4",
-    "quick.db": "^9.1.7"
+    "quick.db": "^9.1.7",
+    "write-file-atomic": "^6.0.0"
   }
 }
